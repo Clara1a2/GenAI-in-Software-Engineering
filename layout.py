@@ -1,8 +1,8 @@
 from milestones_checklist import get_milestones_checklist
-from modal import get_modal_button
 from data import config
 from goals_display import get_goals_card_body
 from csf_inputs import get_inputs
+from navbar import get_navbar
 
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -14,18 +14,26 @@ import pandas as pd
 # Layout
 def create_layout():
     """
-    Create the layout of the app
+    Creates the layout of the app and fills it with elements.
 
     Returns:
     --------
     dbc.Container: The layout of the app
     """
     return dbc.Container(className="p-3", children=[
-        html.H1("GitHub Copilot Implementation Simulator"),
+        get_navbar(),
+        dbc.Card(id="goals-card", children=[], style={
+            "position": "fixed",
+            "top": "80px",
+            "right": "10px",
+            "width": "400px",
+            "padding": "10px",
+            "boxShadow": "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            "zIndex": 1000,
+            "display": "none"
+        }),
         html.P("This app simulates the implementation of GitHub Copilot in a company."),
         html.P("You can configure the team members, adjust the roadmap, and set the KPIs and CSFs."),
-        get_modal_button(),
-        html.Div([], id="out-div"),
         dbc.Container([
             html.H2("Roadmap Timeline"),
             dcc.Graph(
@@ -76,8 +84,8 @@ def create_layout():
         dbc.Button("Update Timeline", id="update-timeline-btn", n_clicks=0, className="m-3"),
         dbc.Button("Reset Timeline", id="reset-timeline-btn", n_clicks=0, className="m-3"),
         dbc.Container([
-            html.H4("Mark Outcomes as Achieved"),
-            html.P("When Outcomes are checked the overall success rate will increse"),
+            html.H4("Mark Outcomes of iterations as achieved"),
+            html.P("When Outcomes are checked the overall success rate will increase"),
             get_milestones_checklist()
         ]),
         dbc.Container([
@@ -117,6 +125,5 @@ def create_layout():
                 ]) for key, value in config.kpi_data.items()
             ]
         ], style={"marginTop": "20px"}),
-        get_goals_card_body(),
         html.Div(id="simulation-output", style={"marginTop": "20px"})
     ])

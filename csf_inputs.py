@@ -26,7 +26,7 @@ def inputs_helper():
         inputs.append(
             dbc.Col([
         dbc.FormText(csf["Metric"]),
-        dbc.Input(value= csf["Current"], type="number", id=f"csf-input-{index}")
+        dbc.Input(value= csf["Current"], type="number", id=f"csf-input-{index}", max=100, min=0, step=1),
         ], width="auto", className="mx-1")
         )
     return inputs

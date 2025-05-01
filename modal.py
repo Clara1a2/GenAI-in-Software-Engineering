@@ -4,19 +4,8 @@ import dash_bootstrap_components as dbc
 from data import config
 
 # Layout of the modal
-def get_modal_button():
-    """
-    Create a button to open a modal for configuring team members.
-
-    Returns:
-        dbc.Button: The button to open the modal.
-    """
-    return html.Div([
-        # Button to open the modal
-        dbc.Button("Configure Team Members", id="open-modal", n_clicks=0, className="mb-3", color="secondary"),
-
-        # The modal
-        dbc.Modal([
+def get_modal():
+    return dbc.Modal([
             dbc.ModalHeader(dbc.ModalTitle("Configure Team Member Parameters")),
             dbc.ModalBody([
                 html.Div([
@@ -60,8 +49,7 @@ def get_modal_button():
                 dbc.Button("Close", id="close-modal", n_clicks=0)
             ]),
             html.Div(id="output-div", className="mt-3")
-        ], id="modal", is_open=False),
-    ])
+        ], id="modal", is_open=False)
 
 def register_modal_callbacks(app):
     """
@@ -80,14 +68,14 @@ def register_modal_callbacks(app):
          Output("commitment-slider", "value"),
          Output("resistance-slider", "value"),
          Output("impact-slider", "value")],
-        [Input("open-modal", "n_clicks"),
+        [Input("open-modal-link", "n_clicks"),
          Input("close-modal", "n_clicks"),
          Input("member-dropdown", "value")],
         [State("modal", "is_open")]
     )
     def toggle_modal(open_clicks, close_clicks, selected_member, is_open):
         """Toggle the modal open or close and display static data."""
-        if ctx.triggered_id == "open-modal":
+        if ctx.triggered_id == "open-modal-link":
             return True, "", "", 3, 3, 3
         if ctx.triggered_id == "close-modal":
             return False, "", "", 3, 3, 3
