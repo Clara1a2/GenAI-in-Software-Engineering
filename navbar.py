@@ -2,8 +2,11 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 from modal import get_modal
+from data import config
 
-def get_navbar(success_rate=31.0, status="Needs Improvement"):
+def get_navbar(success_rate= config.get_success_rate(),
+               status="On Track" if config.get_success_rate() >= 75 else "Needs Improvement",
+               team_members = []):
     return dbc.Navbar(
         dbc.Container([
             dcc.Store(id="goals-card-visibility", data=False),
@@ -41,7 +44,7 @@ def get_navbar(success_rate=31.0, status="Needs Improvement"):
                 ], style={"textAlign": "right", "marginRight": "15px"}),
 
                 # Optional: Button zum Ein-/Ausklappen von Details
-                dbc.Button("Details", id="toggle-collapse-goals", color="primary", size="sm", n_clicks=0)
+                dbc.Button("Details", id="toggle-collapse-goals", color="info", size="sm", n_clicks=0)
             ], className="ms-auto", style={"alignItems": "center"})
         ]),
         sticky="top",

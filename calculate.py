@@ -41,20 +41,20 @@ def calculate_goal_probability(goal):
 
     return weighted_sum / total_weight if total_weight > 0 else 0  # weighted_sum/ total_weight : Wahrscheinlichkeit für das Goal
 
-def calculate_goals_probabilities():
+def calculate_goals_probabilities(goals, goal_probabilities_list):
     """
     Calculate the probabilities for each goal and store them in the config.goal_probabilities_list.
 
     Returns:
         pd.DataFrame: DataFrame containing the goal probabilities for display.
     """
-    for goal in config.goals:
+    for goal in goals:
         probability = calculate_goal_probability(goal)
-        for goal_prob in config.goal_probabilities_list:
+        for goal_prob in goal_probabilities_list:
             if(goal_prob["Goal"] == goal["Description"]):
                 goal_prob["Probability"] = round(probability * 100, 2)
     # DataFrame aus der Liste erstellen
-    goal_probabilities = pd.DataFrame(config.goal_probabilities_list)
+    goal_probabilities = pd.DataFrame(goal_probabilities_list)
     goal_probabilities["Probability"] = goal_probabilities["Probability"].astype(str) + "%"
     return goal_probabilities
 
@@ -95,20 +95,22 @@ def calculate_milestones_achieved(achieved_milestones):
 
     Args:
         achieved_milestones (list): List of lists of achieved milestones.
-    """
-    total_milestones = sum(len(item["milestones"]) for item in config.iteration_milestone)
-    length_achieved_milestones = sum(len(milestone) for milestone in achieved_milestones)
-    prob = length_achieved_milestones/total_milestones
-    config.milestone_multiplicator = round(prob * 0.4,2)
 
-def calculate_overall_success():
+    returns: milestone_multiplicator to be stored
+    """
+    #total_milestones = sum(len(item["milestones"]) for item in iteration_milestone)
+    length_achieved_milestones = sum(len(milestone) for milestone in achieved_milestones)
+    #prob = length_achieved_milestones/total_milestones
+    return round(5 * 0.4,2)
+
+def calculate_overall_success(goal_probabilities_list):
     """
     Calculate the overall success rate based on the goal probabilities, milestone multiplicator and team influence
     """
     goals_probabilities_mean = 0.00
-    for goal in config.goal_probabilities_list:
+    for goal in goal_probabilities_list:
         goals_probabilities_mean += goal["Probability"]
-    goals_probabilities_mean /= len(config.goal_probabilities_list)
+    goals_probabilities_mean /= len(goal_probabilities_list)
     config.goals_multiplicator = round(goals_probabilities_mean/100*0.4, 2)
 
     # Calculate team influence

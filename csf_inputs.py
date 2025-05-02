@@ -36,15 +36,27 @@ def get_inputs():
                 inputs_helper(),
                 className="mb-3")
 
+#ToDO : Update Input based on Store not config
 def register_csf_inputs_callbacks(app):
     @app.callback(
+        Output("csf-store", "data"),
+        [Input(f"csf-input-{index}", "value") for index in range(len(config.csf_data))],
+        prevent_initial_call=True
+    )
+    def update_csf_store(*csf_values):
+        # Optional: Werte in Dict mit Namen, falls du die brauchst
+        csf_keys = [item["Metric"] for item in config.csf_data]
+        return [dict(Metric=key, Current=value,
+                     Target=next((x["Target"] for x in config.csf_data if x["Metric"] == key), None))
+                for key, value in zip(csf_keys, csf_values)]
+
+    @app.callback(
         [Output("csf-bar-chart", "figure")],
-        [
-            Input(f"csf-input-{index}", "value") for index in range(len(config.csf_data))
-        ],
+        [Input("csf-store", "data")],
         prevent_initial_call=True)
     def save_csf_inputs(*values):
         for index, value in enumerate(values):
+            #print(f"csf-input-{index}: {value}")
             config.csf_data[index]["Current"] = value
         calculate_goals_probabilities()
         fig = px.bar(

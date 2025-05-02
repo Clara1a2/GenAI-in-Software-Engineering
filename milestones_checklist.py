@@ -11,7 +11,6 @@ Functions:
 """
 
 from data import config
-from goals_display import get_goals_card_body
 
 from dash import html, dcc
 import dash_bootstrap_components as dbc

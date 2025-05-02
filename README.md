@@ -2,6 +2,11 @@
 
 This project provides a comprehensive dashboard to model, visualize, and analyze the success rate of goals based on Key Performance Indicators (KPIs), Critical Success Factors (CSFs), milestones, and team impact. The application is developed using **Dash**, **Plotly**, **Dash Bootstrap Components**, and **Python**.
 
+- Wie soll berechnung funktionieren
+- Welche Faktoren sind wichtig? (KPis, CSFs, milestones, team impact)
+- Beeinflusst KPIs die CSFs? 
+- Was beeinflusst was
+
 ## Features
 
 - **KPI and CSF-Based Goal Success Calculation**:

@@ -18,7 +18,13 @@ class Config:
         self.roadmap_data["Start"] = pd.to_datetime(self.roadmap_data["Start"])
         self.roadmap_data["End"] = pd.to_datetime(self.roadmap_data["End"])
 
-        self.iteration_milestone = data['iteration_milestone']
+        self.iteration_milestone = [
+            {
+                "iteration": row["Iteration"],
+                "milestones": row["Milestones"]
+            }
+            for _, row in self.roadmap_data.iterrows()
+        ]
 
         self.kpi_data = data['kpis']
         self.csf_data = data['csfs']
@@ -39,9 +45,20 @@ def init_goal_probabilities_list(goals):
     for goal in goals:
             goal_probabilities_list.append(
                 {
-                        "Goal": goal["Description"],
-                    "Probability": 0.22  # Platzhalter
+                    "Goal": goal["Description"],
+                    "Probability": 0.22  # Placeholder
                 }
             )
     return goal_probabilities_list
+
+# Initialize the config object for first state
 config = Config()
+
+def load_initial_data():
+    return {
+        "milestone-store": config.iteration_milestone,
+        "kpi-store": config.kpi_data,
+        "csf-store": config.csf_data,
+        "goals-data-store": {"goals":config.goals, "probabilities": config.goal_probabilities_list},
+        "team-store": config.team_members,
+    }

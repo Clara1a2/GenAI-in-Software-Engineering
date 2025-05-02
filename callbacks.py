@@ -112,3 +112,21 @@ def register_callbacks(app):
         fig.update_layout(xaxis_title="Timeline", yaxis_title="Implementation Phase", showlegend=False)
         fig.for_each_trace(lambda trace: trace.update(opacity=0.5 if trace.name in achieved_milestones else 1))
         return fig
+
+    # ---------------------- Update Stores based on User Input ---------------------- #
+    @app.callback(
+        Output("milestone-store", "data"),
+        [Input(f"milestones-checklist-{index}", "value") for index in range(len(config.iteration_milestone))],
+        prevent_initial_call=True
+    )
+    def update_milestone_store(*values):
+        return list(values)
+
+    @app.callback(
+        Output("kpi-store", "data"),
+        [Input(f"{key.replace(' ', '-').lower()}-slider", "value") for key in config.kpi_data.keys()],
+        prevent_initial_call=True
+    )
+    def update_kpi_store(*slider_values):
+        keys = list(config.kpi_data.keys())
+        return dict(zip(keys, slider_values))

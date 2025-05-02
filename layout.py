@@ -1,6 +1,5 @@
 from milestones_checklist import get_milestones_checklist
-from data import config
-from goals_display import get_goals_card_body
+from data import config, load_initial_data
 from csf_inputs import get_inputs
 from navbar import get_navbar
 
@@ -20,8 +19,15 @@ def create_layout():
     --------
     dbc.Container: The layout of the app
     """
-    return dbc.Container(className="p-3", children=[
+    initial_data = load_initial_data()
+
+    return html.Div(children=[
+        dcc.Store(id="milestone-store", data=initial_data["milestone-store"]),
+        dcc.Store(id="kpi-store", data=initial_data["kpi-store"]),
+        dcc.Store(id="csf-store", data=initial_data["csf-store"]),
+        dcc.Store(id="goals-data-store", data=initial_data["goals-data-store"]),
         get_navbar(),
+        dbc.Container(className="p-3", children=[
         dbc.Card(id="goals-card", children=[], style={
             "position": "fixed",
             "top": "80px",
@@ -126,4 +132,5 @@ def create_layout():
             ]
         ], style={"marginTop": "20px"}),
         html.Div(id="simulation-output", style={"marginTop": "20px"})
+    ])
     ])
